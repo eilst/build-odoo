@@ -1,0 +1,8 @@
+
+https://github.com/OCA/l10n-canada                       a9ba66e18a536b64e825468d12cc0672dbc326b4
+https://github.com/OCA/server-tools                      6f4e268c9c27ae50568b7719de427349befd24fe
+https://github.com/OCA/web                               1e5872a72fe4989b8e73f9bebb6a5e248ed606a1
+https://github.com/OCA/server-auth                       b176a8e64926d698195620c9b986abe8713bf623
+https://github.com/savoirfairelinux/project-addons       110c584854feced0362436bbe2881a83458882df
+https://github.com/savoirfairelinux/crm                  067e0d8e8b20de21f799965ccb4de5498bb8b261
+https://github.com/savoirfairelinux/web-addons           b82b839f8e25a4a9f6f2ec0e5f62794dff6f1be9
