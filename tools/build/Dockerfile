@@ -8,7 +8,7 @@ RUN set -x; \
         ca-certificates
 COPY checkout.sh /
 COPY addons.txt /
-RUN useradd -d / ${USER} && \
-    chown -R ${USER}:${USER} /
+RUN useradd -d /git ${USER} && \
+    chown -R ${USER}:${USER} /git
 USER ${USER}
 ENTRYPOINT ["/checkout.sh"]
