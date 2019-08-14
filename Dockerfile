@@ -76,14 +76,16 @@ RUN set -x; \
 
 RUN set -x; \
     mkdir -p /opt/${USER}/git && \
+    mkdir -p /opt/${USER}/tools &&\
     mkdir -p /opt/${USER}/.local/share/Odoo && \
     useradd -d /opt/${USER} ${USER} && \
     chown -R ${USER}:${USER} /opt/${USER}
 
-COPY addons.txt /opt/${USER}/
-COPY checkout.sh /opt/${USER}/
-RUN cd /opt/${USER}/ && \
-    bash checkout.sh
+COPY entrypoint.sh /opt/${USER}/tools/
+# COPY addons.txt /opt/${USER}/
+# COPY checkout.sh /opt/${USER}/
+# RUN cd /opt/${USER}/ && \
+#     bash checkout.sh
 USER ${USER}
 
 VOLUME /opt/${USER}/.local/share/Odoo

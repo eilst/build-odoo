@@ -1,5 +1,9 @@
 version: '3'
 services:
+  checkout:
+    build: ./tools/build
+    volumes:
+      - ./addons:/git
   db:
     environment:
       - POSTGRES_PASSWORD=odoo
@@ -13,13 +17,14 @@ services:
         ipv4_address: 10.5.0.5
   odoo:
     build: .
+    entrypoint: /opt/odoo/tools/entrypoint.sh
     ports:
       - "8069:8069"
       - "9999:9999"
       - "8071:8071"
     volumes:
-      - odoo_data_dir:/opt/odoodev/.local/share/Odoo:Z
-      - ./addons:/opt/odoo 
+      - odoo_data_dir:/opt/odoo/.local/share/Odoo:Z
+      - ./addons:/mnt/extra-addons
     links:
       - db
       - saml-idp
@@ -30,6 +35,8 @@ services:
       - HOST=db
       - USER=odoo
       - PASSWORD=odoo
+    depends_on:
+      - checkout
     networks:
       vpcbr:
         ipv4_address: 10.5.0.6
