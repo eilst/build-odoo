@@ -19,7 +19,7 @@ services:
       - "8071:8071"
     volumes:
       - odoo_data_dir:/opt/odoodev/.local/share/Odoo:Z
-      - ./addons:/mnt/extra-addons 
+      - ./addons:/opt/odoo 
     links:
       - db
       - saml-idp

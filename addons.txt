@@ -6,3 +6,4 @@ https://github.com/OCA/server-auth                       b176a8e64926d698195620c
 https://github.com/savoirfairelinux/project-addons       110c584854feced0362436bbe2881a83458882df
 https://github.com/savoirfairelinux/crm                  067e0d8e8b20de21f799965ccb4de5498bb8b261
 https://github.com/savoirfairelinux/web-addons           b82b839f8e25a4a9f6f2ec0e5f62794dff6f1be9
+https://github.com/odoo/odoo                             a2b98e94beb2b64623bfca006e96d34cb6651ae8
