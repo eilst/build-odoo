@@ -1,11 +1,6 @@
 #!/bin/bash
 TOOLS_DIR=/opt/$USER/tools
-ls
-pwd
-bash /opt/$USER/git/odoo/odoo-bin
-# if [ ! -f .odoorc ]; then
-#     create_serverrc
-# fi
+exec /opt/$USER/git/odoo/odoo-bin
 
 # if [ ! -f git/sfl/tools/bin/start_odoo ]; then
 #     git config --global user.name 'Docker Container'

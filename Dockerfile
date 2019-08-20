@@ -59,7 +59,6 @@ RUN set -x; \
         python3-coverage \
         ${dev_packages}  && \
     pip3 install setuptools==39.1.0 && \
-    pip3 install zc.buildout==2.12.1 && \
     curl -o /tmp/requirements-extra.txt -SL https://github.com/odoo/odoo/raw/${VERSION}/requirements.txt && \
     mkdir -p /opt/${USER} && \
     pip3 install urllib3[secure] && \
