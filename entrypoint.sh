@@ -1,6 +1,22 @@
 #!/bin/bash
 TOOLS_DIR=/opt/$USER/tools
-exec /opt/$USER/git/odoo/odoo-bin
+exec /opt/$USER/git/odoo/odoo-bin -c  /opt/$USER/tools/odoo.conf
+
+create_serverrc () {
+    # Create .openerp_serverrc file
+    echo -n "Creating ~/.odoorc file... "
+    if [ ! -e ~/.odoorc ]; then
+        echo "OK"
+    else
+        echo "File exists!"
+    fi
+}
+
+exec ls
+
+
+
+
 
 # if [ ! -f git/sfl/tools/bin/start_odoo ]; then
 #     git config --global user.name 'Docker Container'

@@ -2,7 +2,6 @@
 git config --global user.name 'Luis'
 git config --global user.email 'luis.garcia@savoirfairelinux.com'
 input="./addons.txt"
-mkdir -p git
 while IFS= read -r line
 do
    repo=$(echo  "$line"| awk '{print $1;}')
