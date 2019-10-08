@@ -1,42 +1,57 @@
 #!/bin/bash
+TOOLS_DIR=/opt/$USER/tools
+exec /opt/$USER/git/odoo/odoo-bin -c  /opt/$USER/tools/odoo.conf
 
-set -e
-
-# set the postgres database host, port, user and password according to the environment
-# and pass them as arguments to the odoo process if not present in the config file
-: ${HOST:=${DB_PORT_5432_TCP_ADDR:='db'}}
-: ${PORT:=${DB_PORT_5432_TCP_PORT:=5432}}
-: ${USER:=${DB_ENV_POSTGRES_USER:=${POSTGRES_USER:='odoo'}}}
-: ${PASSWORD:=${DB_ENV_POSTGRES_PASSWORD:=${POSTGRES_PASSWORD:='odoo'}}}
-
-DB_ARGS=()
-function check_config() {
-    param="$1"
-    value="$2"
-    if ! grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then
-        DB_ARGS+=("--${param}")
-        DB_ARGS+=("${value}")
-   fi;
+create_serverrc () {
+    # Create .openerp_serverrc file
+    echo -n "Creating ~/.odoorc file... "
+    if [ ! -e ~/.odoorc ]; then
+        echo "OK"
+    else
+        echo "File exists!"
+    fi
 }
-check_config "db_host" "$HOST"
-check_config "db_port" "$PORT"
-check_config "db_user" "$USER"
-check_config "db_password" "$PASSWORD"
 
-case "$1" in
-    -- | odoo)
-        shift
-        if [[ "$1" == "scaffold" ]] ; then
-            exec odoo "$@"
-        else
-            exec odoo "$@" "${DB_ARGS[@]}"
-        fi
-        ;;
-    -*)
-        exec odoo "$@" "${DB_ARGS[@]}"
-        ;;
-    *)
-        exec "$@"
-esac
+exec ls
 
-exit 1
+
+
+
+
+# if [ ! -f git/sfl/tools/bin/start_odoo ]; then
+#     git config --global user.name 'Docker Container'
+#     git config --global user.email 'support@savoirfairelinux.com'
+#     git/sfl/tools/dev.sh || return 1
+# fi
+
+# sed -i '/db_host/d' git/sfl/tools/etc/dev.cfg
+# if [ -d /opt/$USER/ENV ]; then
+#     cd ENV
+#     source bin/activate
+#     cd ..
+# fi
+
+
+# case $1 in
+#     start_odoo)
+# 	shift
+# 	git/odoo/odoo-bin $@
+# 	;;
+#     env)
+# 	echo "Entering interactive mode..."
+# 	bash -l
+# 	;;
+#     *)
+# 	echo "Unknow command!"
+# 	echo "$@"
+# 	echo
+# 	echo "Usage:"
+# 	echo
+# 	echo "docker-compose -f tools/docker-compose.yml run --service-ports odoo [command] [args]"
+# 	echo
+# 	echo "Where command can be:"
+# 	echo "   start_odoo | upgrade_odoo [odoo args]"
+# 	echo "   dev.sh | lab.sh | prod.sh"
+# 	echo
+# 	;;
+# esac

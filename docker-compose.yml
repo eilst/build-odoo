@@ -1,25 +1,33 @@
 version: '3'
 services:
+  checkout:
+    build: ./tools/build
+    volumes:
+      - ./addons:/git
+      - ${PWD}/odoo.conf:/odoo.conf
   db:
+    image: postgres:10
     environment:
+      - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
       - PGDATA=/var/lib/postgresql/data/pgdata
-    image: postgres:10
     volumes:
-      - dbdata:/var/lib/postgresql/data/pgdata
+      - dbdata2:/var/lib/postgresql/data/pgdata
     networks:
       vpcbr:
         ipv4_address: 10.5.0.5
   odoo:
     build: .
+    entrypoint: /opt/odoo/tools/entrypoint.sh
     ports:
       - "8069:8069"
       - "9999:9999"
       - "8071:8071"
     volumes:
-      - odoo_data_dir:/opt/odoodev/.local/share/Odoo:Z
-      - ./addons:/mnt/extra-addons 
+      - odoo_data_dir:/opt/odoo/.local/share/Odoo:Z
+      - ./addons:/opt/odoo/git
+      - ${PWD}/odoo.conf:/opt/odoo/tools/odoo.conf
     links:
       - db
       - saml-idp
@@ -36,6 +44,7 @@ services:
     depends_on:
      - db
      - saml-idp
+     - checkout
   saml-idp:
     image: eilst/saml-idp
     ports:
@@ -48,6 +57,20 @@ services:
     networks:
       vpcbr:
         ipv4_address: 10.5.0.7
+  db_web:
+    image: fenglc/pgadmin4:2.1
+    environment:
+      - DEFAULT_USER=odoo
+      - DEFAULT_PASSWORD=odoo
+      - MAIL_SERVER=smtp
+      - MAIL_PORT=1025
+    links:
+      - db
+    ports:
+      - "5050:5050"
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.3
 networks:
   vpcbr:
     driver: bridge
@@ -55,5 +78,5 @@ networks:
      config:
        - subnet: 10.5.0.0/16
 volumes:
-  dbdata:
+  dbdata2:
   odoo_data_dir:

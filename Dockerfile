@@ -1,14 +1,6 @@
 FROM ubuntu:16.04
-LABEL maintainer="Odoo S.A. <info@odoo.com>"
-
-# Generate locale C.UTF-8 for postgres and general locale data
-ENV LANG C.UTF-8
-MAINTAINER <support@savoirfairelinux.com> Savoir-faire Linux Inc.
 
 ENV USER odoo
-ENV VERSION 11.0
-# Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
-ENV USER odoodev
 ENV VERSION 11.0
 ENV dev_packages libjpeg-dev \
     libpq-dev \
@@ -39,6 +31,7 @@ RUN set -x; \
 
 ENV LANG en_US.UTF-8
 
+COPY requirements.txt /tmp/
 RUN set -x; \
     apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -66,37 +59,36 @@ RUN set -x; \
         python3-coverage \
         ${dev_packages}  && \
     pip3 install setuptools==39.1.0 && \
-    pip3 install zc.buildout==2.12.1 && \
-    curl -o /tmp/requirements.txt -SL https://github.com/odoo/odoo/raw/${VERSION}/requirements.txt && \
+    curl -o /tmp/requirements-extra.txt -SL https://github.com/odoo/odoo/raw/${VERSION}/requirements.txt && \
     mkdir -p /opt/${USER} && \
-    python3 /tmp/frozen2requirements.py /tmp/frozen.cfg > /tmp/requirements-extra.txt && \
     pip3 install urllib3[secure] && \
-    pip3 install -r /tmp/requirements-extra.txt && \
     pip3 install -r /tmp/requirements.txt && \
+    pip3 install -r /tmp/requirements-extra.txt && \
     rm -f /tmp/requirements.txt && \
     rm -f /tmp/requirements-extra.txt && \
-    rm -f /tmp/frozen2requirements.py && \
     apt-get -y remove ${dev_packages} && \
     apt-get clean all
 
+RUN set -x; \
+    curl -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz | \
+    tar xJ --strip-components=2 -C /usr/local/bin/ wkhtmltox/bin/wkhtmltopdf
 
-COPY ./entrypoint.sh /
-COPY ./odoo.conf /etc/odoo/
-RUN chown odoo /etc/odoo/odoo.conf
+RUN set -x; \
+    mkdir -p /opt/${USER}/git && \
+    mkdir -p /opt/${USER}/tools &&\
+    mkdir -p /opt/${USER}/.local/share/Odoo && \
+    useradd -d /opt/${USER} ${USER} && \
+    chown -R ${USER}:${USER} /opt/${USER}
 
-# Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
-RUN mkdir -p /mnt/extra-addons \
-        && chown -R odoo /mnt/extra-addons
-VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
+COPY entrypoint.sh /opt/${USER}/tools/
+# COPY addons.txt /opt/${USER}/
+# COPY checkout.sh /opt/${USER}/
+# RUN cd /opt/${USER}/ && \
+#     bash checkout.sh
+USER ${USER}
 
-# Expose Odoo services
-EXPOSE 8069 8071 9999
+VOLUME /opt/${USER}/.local/share/Odoo
 
-# Set the default config file
-ENV ODOO_RC /etc/odoo/odoo.conf
+WORKDIR /opt/${USER}/
 
-# Set default user when running the container
-USER odoo
-
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["odoo"]
+EXPOSE 9999 8069 8071 8072
