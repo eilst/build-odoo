@@ -4,6 +4,7 @@ services:
     build: ./tools/build
     volumes:
       - ./addons:/git
+      - ${PWD}/odoo.conf:/odoo.conf
   db:
     image: postgres:10
     environment:
@@ -26,6 +27,7 @@ services:
     volumes:
       - odoo_data_dir:/opt/odoo/.local/share/Odoo:Z
       - ./addons:/opt/odoo/git
+      - ${PWD}/odoo.conf:/opt/odoo/tools/odoo.conf
     links:
       - db
       - saml-idp

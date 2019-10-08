@@ -1,4 +1,5 @@
 #!/bin/bash
+ls
 git config --global user.name 'Luis'
 git config --global user.email 'luis.garcia@savoirfairelinux.com'
 input="./addons.txt"
@@ -14,3 +15,18 @@ do
 done < "$input"
 cd git
 echo $(find . -maxdepth 2 -type d ! -name '.*' -printf '%f,') 
+
+addons=$(find . -maxdepth 1 -type d ! -name '.*' -printf '%f,') 
+addons_path="addons_path = /opt/odoo/git/odoo/odoo/addons/,/opt/odoo/git/odoo/addons/"
+home="/opt/odoo/git/"
+
+for i in $(echo "$addons" | sed "s/,/ /g")
+do
+    if [ "$i" == "odoo" ]; then
+    continue
+    fi
+    # call your procedure/other scripts here below
+    addons_path="${addons_path},${home}$i/"
+done
+# TODO: check if addons attribute is present
+echo "$addons_path" >> ../odoo.conf

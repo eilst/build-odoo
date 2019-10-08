@@ -81,7 +81,6 @@ RUN set -x; \
     chown -R ${USER}:${USER} /opt/${USER}
 
 COPY entrypoint.sh /opt/${USER}/tools/
-COPY odoo.conf /opt/${USER}/tools/
 # COPY addons.txt /opt/${USER}/
 # COPY checkout.sh /opt/${USER}/
 # RUN cd /opt/${USER}/ && \
