@@ -1,5 +1,4 @@
 #!/bin/bash
-ls
 git config --global user.name 'Luis'
 git config --global user.email 'luis.garcia@savoirfairelinux.com'
 input="./addons.txt"
